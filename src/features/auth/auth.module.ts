@@ -1,0 +1,33 @@
+import { Module } from '@nestjs/common'
+
+import { UserModule } from '../user/user.module'
+import { LocalStrategy } from './strategies/local.strategy'
+import { PassportModule } from '@nestjs/passport'
+
+import { JwtStrategy } from './strategies/jwt.strategy'
+import { BasicAuthStrategy } from './strategies/basic.strategy'
+import { BasicAuthGuard } from './guards/basic-auth.guard'
+import { JwtAuthGuard } from './guards/jwt-auth.guard'
+import { LocalAuthGuard } from './guards/local-auth.guard'
+
+import { OptionalJwtAuthGuard } from './guards/optional-jwt-auth-guard.guard'
+import { AuthController } from './controller/auth.controller'
+import { AuthService } from './service/auth.service'
+import { CustomJwtModule } from '../../common/jwt-module/jwt.module'
+
+@Module({
+  imports: [UserModule, PassportModule, CustomJwtModule],
+  controllers: [AuthController],
+  providers: [
+    LocalStrategy,
+    JwtStrategy,
+    BasicAuthStrategy,
+    BasicAuthGuard,
+    JwtAuthGuard,
+    LocalAuthGuard,
+    OptionalJwtAuthGuard,
+    AuthService,
+  ],
+  exports: [BasicAuthGuard, JwtAuthGuard, LocalAuthGuard, OptionalJwtAuthGuard, AuthService],
+})
+export class AuthModule {}
