@@ -1,10 +1,16 @@
 import { UserDocument } from '../domain/user.entity'
 
+export type wishlistType = {
+    movieId: string
+    order: number
+}
+
 export class UserOutputModel {
   id: string
   login: string
   email: string
   imageUrl: string | null
+  wishlist: wishlistType[]
 }
 
 export class UserServiceModel {
@@ -14,6 +20,7 @@ export class UserServiceModel {
   passwordSalt: string
   passwordHash: string
   imageUrl: string | null
+  wishlist: wishlistType[]
 }
 
 export const UserOutputMapper = (user: UserDocument): UserOutputModel => {
@@ -23,7 +30,7 @@ export const UserOutputMapper = (user: UserDocument): UserOutputModel => {
   userOutputModel.login = user.login
   userOutputModel.email = user.email
   userOutputModel.imageUrl = user.imageUrl
-
+  userOutputModel.wishlist = user.wishlist
   return userOutputModel
 }
 

@@ -10,8 +10,7 @@ export type QueryMovieInputModel = {
 
 export type UserType = {
   id: string
-  name: string
+  login: string
   email: string
-  password: string
   imageUrl: string | null
 }

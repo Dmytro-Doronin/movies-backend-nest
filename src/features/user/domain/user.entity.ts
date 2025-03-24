@@ -24,7 +24,15 @@ export class User {
   @Prop({ required: false, default: null, type: String })
   imageUrl: string | null
 
-  static create({ id, login, email, passwordHash, passwordSalt, imageUrl }: UserServiceModel) {
+  @Prop([
+      {
+         movieId: { type: String, required: true },
+         order: { type: Number, required: true },
+     },
+  ])
+  wishlist: { movieId: string; order: number }[];
+
+  static create({ id, login, email, passwordHash, passwordSalt, imageUrl, wishlist }: UserServiceModel) {
     const user = new User()
     user.id = id
     user.login = login
@@ -32,6 +40,7 @@ export class User {
     user.passwordHash = passwordHash
     user.passwordSalt = passwordSalt
     user.imageUrl = imageUrl ?? null
+    user.wishlist = wishlist ?? []
 
     return user
   }

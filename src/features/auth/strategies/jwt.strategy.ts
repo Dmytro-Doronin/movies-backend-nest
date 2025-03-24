@@ -15,11 +15,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    console.log('guard work')
     const user = await this.userQueryRepository.getUserById(payload.sub)
     if (!user) {
       throw new UnauthorizedException()
     }
-    return { userId: payload.sub, deviceId: payload.deviceId }
+    return { userId: payload.sub }
   }
 }

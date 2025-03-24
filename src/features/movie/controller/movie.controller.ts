@@ -1,20 +1,21 @@
 import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-  Put,
-  Query,
-  ValidationPipe,
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    NotFoundException,
+    Param,
+    Post,
+    Put,
+    Query, UseGuards,
+    ValidationPipe,
 } from '@nestjs/common'
 import { MovieService } from '../service/movie.service'
 import { CreateMovieDto } from '../models/create-movie.dto'
 import { QueryMovieInputModel } from '../../../types/common-types'
 import { MovieQueryRepository } from '../repositories/movies-query.repository'
+import {JwtAuthGuard} from "../../auth/guards/jwt-auth.guard";
 
 @Controller('/movies')
 export class MovieController {
@@ -42,6 +43,7 @@ export class MovieController {
     return await this.movieQueryRepository.getAllMovies(sortData)
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createNewBlogController(@Body(new ValidationPipe()) createMovieDto: CreateMovieDto) {
     const result = await this.movieService.createMovieService({
@@ -56,6 +58,7 @@ export class MovieController {
     return result
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/:id')
   async changeBlogByIdController(
     @Body(new ValidationPipe()) createMovieDto: CreateMovieDto,
@@ -90,7 +93,8 @@ export class MovieController {
     return movie
   }
 
-  @Delete('/:id')
+    @UseGuards(JwtAuthGuard)
+    @Delete('/:id')
   async deleteMovieController(@Param('id') movieId: string) {
     const movie = await this.movieService.deleteBlogByIdService(movieId)
 
