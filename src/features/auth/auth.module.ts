@@ -14,7 +14,7 @@ import { OptionalJwtAuthGuard } from './guards/optional-jwt-auth-guard.guard'
 import { AuthController } from './controller/auth.controller'
 import { AuthService } from './service/auth.service'
 import { CustomJwtModule } from '../../common/jwt-module/jwt.module'
-import {IsUserAlreadyExistConstraint} from "../../common/validator/validation-login-password.validator";
+import { IsUserAlreadyExistConstraint } from '../../common/validator/validation-login-password.validator'
 
 @Module({
   imports: [UserModule, PassportModule, CustomJwtModule],

@@ -25,14 +25,22 @@ export class User {
   imageUrl: string | null
 
   @Prop([
-      {
-         movieId: { type: String, required: true },
-         order: { type: Number, required: true },
-     },
+    {
+      movieId: { type: String, required: true },
+      order: { type: Number, required: true },
+    },
   ])
-  wishlist: { movieId: string; order: number }[];
+  wishlist: { movieId: string; order: number }[]
 
-  static create({ id, login, email, passwordHash, passwordSalt, imageUrl, wishlist }: UserServiceModel) {
+  static create({
+    id,
+    login,
+    email,
+    passwordHash,
+    passwordSalt,
+    imageUrl,
+    wishlist,
+  }: UserServiceModel) {
     const user = new User()
     user.id = id
     user.login = login

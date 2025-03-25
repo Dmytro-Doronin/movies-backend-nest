@@ -1,8 +1,8 @@
 import { UserDocument } from '../domain/user.entity'
 
 export type wishlistType = {
-    movieId: string
-    order: number
+  movieId: string
+  order: number
 }
 
 export class UserOutputModel {

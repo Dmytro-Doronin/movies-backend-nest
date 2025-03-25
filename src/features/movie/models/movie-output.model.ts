@@ -1,4 +1,3 @@
-import { Prop } from '@nestjs/mongoose'
 import { MovieDocument } from '../domain/movie.entity'
 
 export class Actor {

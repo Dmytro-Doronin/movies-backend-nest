@@ -23,18 +23,6 @@ export class MovieRepository {
     }
   }
 
-  async getMovieById(id: string) {
-    try {
-      const movie = await this.MovieModel.findOne({ id: id }).lean()
-      if (!movie) {
-        return null
-      }
-      return movie
-    } catch (e) {
-      throw new Error('Movie was not found')
-    }
-  }
-
   async changeMovieById({ id, ...rest }: ChangeMovieByIdTypes) {
     try {
       const updatedMovie = await this.MovieModel.findOneAndUpdate(
@@ -48,6 +36,14 @@ export class MovieRepository {
       return updatedMovie
     } catch (e) {
       throw new Error('Movie was not changed by id')
+    }
+  }
+
+  async getWishlist(movieIds: string[]) {
+    try {
+      return await this.MovieModel.find({ id: { $in: movieIds } })
+    } catch (e) {
+      throw new Error('User was not found')
     }
   }
 

@@ -11,7 +11,7 @@ import { UserQueryRepository } from '../../features/user/repositories/user-query
 //registration in IoC
 @ValidatorConstraint({ async: true })
 export class IsUserAlreadyExistConstraint implements ValidatorConstraintInterface {
-    constructor(private userQueryRepository: UserQueryRepository) {}
+  constructor(private userQueryRepository: UserQueryRepository) {}
 
   async validate(userName: any, args: ValidationArguments) {
     const userEmail = await this.userQueryRepository.getUserByLogin(userName)

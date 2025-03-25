@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { User } from '../domain/user.entity'
 import { Model } from 'mongoose'
-import {UserServiceMapper, wishlistType} from '../models/user-output.model'
+import { wishlistType } from '../models/user-output.model'
 
 @Injectable()
 export class UserRepository {
@@ -25,37 +25,14 @@ export class UserRepository {
   }
 
   async changeWishlist(id: string, updatedWishlist: wishlistType[]) {
-      try {
-          return await this.UserModel.findOneAndUpdate(
-              { id },
-              { $set: { wishlist: updatedWishlist } },
-              { new: true }
-          );
-
-
-      } catch (e) {
-          throw new Error('User was not found')
-      }
-  }
-
-
-  async getUserById(userId: string) {
     try {
-      const res = await this.UserModel.findOne({ id: userId }).lean()
-
-      return res
+      return await this.UserModel.findOneAndUpdate(
+        { id },
+        { $set: { wishlist: updatedWishlist } },
+        { new: true }
+      )
     } catch (e) {
       throw new Error('User was not found')
-    }
-  }
-
-  async deleteUser(userId: string) {
-    try {
-      const res = await this.UserModel.deleteOne({ id: userId })
-
-      return res.deletedCount === 1
-    } catch (e) {
-      throw new Error('User was not deleted')
     }
   }
 }
