@@ -15,9 +15,20 @@ import { AuthController } from './controller/auth.controller'
 import { AuthService } from './service/auth.service'
 import { CustomJwtModule } from '../../common/jwt-module/jwt.module'
 import { IsUserAlreadyExistConstraint } from '../../common/validator/validation-login-password.validator'
+import {MongooseModule} from "@nestjs/mongoose";
+import {RefreshTokenEntity, RefreshTokenSchema} from "./domain/refresh-token.entity";
+import {TokenRepository} from "./repository/token.repository";
+import {TokenService} from "./service/token.service";
 
 @Module({
-  imports: [UserModule, PassportModule, CustomJwtModule],
+  imports: [
+      UserModule,
+      PassportModule,
+      CustomJwtModule,
+      MongooseModule.forFeature([
+          { name: RefreshTokenEntity.name, schema: RefreshTokenSchema }
+      ]),
+  ],
   controllers: [AuthController],
   providers: [
     LocalStrategy,
@@ -29,7 +40,9 @@ import { IsUserAlreadyExistConstraint } from '../../common/validator/validation-
     OptionalJwtAuthGuard,
     AuthService,
     IsUserAlreadyExistConstraint,
+    TokenRepository,
+    TokenService
   ],
-  exports: [BasicAuthGuard, JwtAuthGuard, LocalAuthGuard, OptionalJwtAuthGuard, AuthService],
+  exports: [BasicAuthGuard, JwtAuthGuard, LocalAuthGuard, OptionalJwtAuthGuard, AuthService, TokenService],
 })
 export class AuthModule {}

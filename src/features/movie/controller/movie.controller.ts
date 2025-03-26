@@ -1,16 +1,16 @@
 import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-  ValidationPipe,
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    NotFoundException,
+    Param,
+    Post,
+    Put,
+    Query, Request,
+    UseGuards,
+    ValidationPipe,
 } from '@nestjs/common'
 import { MovieService } from '../service/movie.service'
 import { CreateMovieDto } from '../models/create-movie.dto'
@@ -46,9 +46,16 @@ export class MovieController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async createNewBlogController(@Body(new ValidationPipe()) createMovieDto: CreateMovieDto) {
+  async createNewMovieController(
+      @Request() req,
+      @Body(new ValidationPipe()) createMovieDto: CreateMovieDto
+  ) {
+
+      const user = req.user.userId
+      console.log(user)
+
     const result = await this.movieService.createMovieService({
-      userId: '123',
+      userId: req.user.userId,
       ...createMovieDto,
     })
 

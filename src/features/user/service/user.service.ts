@@ -101,6 +101,16 @@ export class UserService {
         }))
   }
 
+    async deleteFromWishList(userId: string, movieId: string) {
+        const user = await this.userQueryRepository.getUserById(userId)
+        if (!user) {
+            throw new NotFoundException('User not found')
+        }
+
+        return await this.userRepository.deleteMovieFromWishlist(userId, movieId)
+
+    }
+
   async _generateHash(password: string, salt: string) {
     return await bcrypt.hash(password, salt)
   }

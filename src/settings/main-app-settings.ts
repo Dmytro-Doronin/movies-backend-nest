@@ -2,7 +2,7 @@ import { BadRequestException, INestApplication, ValidationPipe } from '@nestjs/c
 import { useContainer } from 'class-validator'
 import { AppModule } from '../app.module'
 import { HttpExceptionFilter } from '../common/exceptions/exception.filter'
-const cookieParser = require('cookie-parser')
+import * as cookieParser from 'cookie-parser';
 export const mainAppSettings = (app: INestApplication) => {
   app.use(cookieParser())
 

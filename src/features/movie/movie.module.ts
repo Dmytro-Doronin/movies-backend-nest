@@ -5,9 +5,10 @@ import { MovieController } from './controller/movie.controller'
 import { MovieService } from './service/movie.service'
 import { MovieRepository } from './repositories/movie.repository'
 import { MovieQueryRepository } from './repositories/movies-query.repository'
+import {UserModule} from "../user/user.module";
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Movie.name, schema: MovieSchema }])],
+  imports: [MongooseModule.forFeature([{ name: Movie.name, schema: MovieSchema }]), UserModule],
   providers: [MovieService, MovieRepository, MovieQueryRepository],
   controllers: [MovieController],
   exports: [MovieRepository],

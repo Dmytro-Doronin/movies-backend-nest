@@ -35,4 +35,21 @@ export class UserRepository {
       throw new Error('User was not found')
     }
   }
+
+    async deleteMovieFromWishlist(userId: string, movieId: string) {
+        try {
+            const result = await this.UserModel.updateOne(
+                { id: userId },
+                {
+                    $pull: {
+                        wishlist: { movieId },
+                    },
+                },
+            );
+
+            return result.modifiedCount === 1
+        } catch (e) {
+            throw new Error('Could not update wishlist');
+        }
+    }
 }

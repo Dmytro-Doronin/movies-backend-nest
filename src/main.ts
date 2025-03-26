@@ -5,9 +5,11 @@ import { mainAppSettings } from './settings/main-app-settings'
 
 async function bootstrap() {
   dotenv.config()
+
   const app = await NestFactory.create(AppModule)
+  mainAppSettings(app)
   await app.listen(process.env.PORT ?? 3000)
 
-  mainAppSettings(app)
+
 }
 bootstrap()

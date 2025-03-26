@@ -1,23 +1,28 @@
-import { Injectable } from '@nestjs/common'
+import {Injectable, NotFoundException} from '@nestjs/common'
 import { MovieRepository } from '../repositories/movie.repository'
 import { CreateMovieDto } from '../models/create-movie.dto'
 import { MovieOutputModel, MovieOutputModelMapper } from '../models/movie-output.model'
 import { Movie } from '../domain/movie.entity'
 import { v4 as uuidv4 } from 'uuid'
 import { ChangeMovieByIdTypes } from '../types/movie.types'
+import {UserQueryRepository} from "../../user/repositories/user-query.repository";
 
 @Injectable()
 export class MovieService {
-  constructor(private readonly movieRepository: MovieRepository) {}
+  constructor(
+      private readonly movieRepository: MovieRepository,
+      private readonly userQueryRepository: UserQueryRepository,
+  ) {}
 
   async createMovieService({
     userId,
     ...rest
   }: CreateMovieDto & { userId: string }): Promise<MovieOutputModel | null> {
-    const user = '123'
+
+  const user = await this.userQueryRepository.getUserById(userId)
 
     if (!user) {
-      return null
+        throw new NotFoundException('User not found')
     }
     const newMovie = Movie.create({ id: uuidv4(), userId: userId, ...rest })
 
