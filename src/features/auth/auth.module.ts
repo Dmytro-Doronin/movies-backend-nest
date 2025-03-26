@@ -19,6 +19,7 @@ import {MongooseModule} from "@nestjs/mongoose";
 import {RefreshTokenEntity, RefreshTokenSchema} from "./domain/refresh-token.entity";
 import {TokenRepository} from "./repository/token.repository";
 import {TokenService} from "./service/token.service";
+import {S3Service} from "../../common/services/s3.service";
 
 @Module({
   imports: [
@@ -41,8 +42,9 @@ import {TokenService} from "./service/token.service";
     AuthService,
     IsUserAlreadyExistConstraint,
     TokenRepository,
-    TokenService
+    TokenService,
+    S3Service
   ],
-  exports: [BasicAuthGuard, JwtAuthGuard, LocalAuthGuard, OptionalJwtAuthGuard, AuthService, TokenService],
+  exports: [BasicAuthGuard, JwtAuthGuard, LocalAuthGuard, OptionalJwtAuthGuard, AuthService, TokenService, S3Service],
 })
 export class AuthModule {}

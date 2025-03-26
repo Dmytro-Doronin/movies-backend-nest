@@ -3,6 +3,7 @@ import { HydratedDocument } from 'mongoose'
 import { Actor } from './actor.entity'
 import { Type } from 'class-transformer'
 import { MovieOutputModel } from '../models/movie-output.model'
+import {MovieCreateInput} from "../types/movie.types";
 
 export type MovieDocument = HydratedDocument<Movie>
 
@@ -74,7 +75,7 @@ export class Movie {
     tagline,
     companies,
     actors,
-  }: MovieOutputModel) {
+  }: MovieCreateInput) {
     const movie = new Movie()
     movie.id = id
     movie.name = name

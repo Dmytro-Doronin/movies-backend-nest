@@ -35,7 +35,6 @@ export class MovieFinalOutputModel {
 
 export const MovieOutputModelMapper = (movie: MovieDocument) => {
   const outputModel = new MovieOutputModel()
-
   outputModel.id = movie.id
   outputModel.userId = movie.userId
   outputModel.name = movie.name

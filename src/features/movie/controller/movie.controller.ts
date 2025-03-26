@@ -8,8 +8,8 @@ import {
     Param,
     Post,
     Put,
-    Query, Request,
-    UseGuards,
+    Query, Request, UploadedFile,
+    UseGuards, UseInterceptors,
     ValidationPipe,
 } from '@nestjs/common'
 import { MovieService } from '../service/movie.service'
@@ -17,12 +17,16 @@ import { CreateMovieDto } from '../models/create-movie.dto'
 import { QueryMovieInputModel } from '../../../types/common-types'
 import { MovieQueryRepository } from '../repositories/movies-query.repository'
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'
+import {FileInterceptor} from "@nestjs/platform-express";
+import {imageFileFilter} from "../../../common/utils/file-filter.utils";
+import {S3Service} from "../../../common/services/s3.service";
 
 @Controller('/movies')
 export class MovieController {
   constructor(
     private readonly movieService: MovieService,
-    private readonly movieQueryRepository: MovieQueryRepository
+    private readonly movieQueryRepository: MovieQueryRepository,
+    private readonly s3Service: S3Service,
   ) {}
 
   @Get()
@@ -46,18 +50,29 @@ export class MovieController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
+  @UseInterceptors(
+      FileInterceptor('image', {
+          fileFilter: imageFileFilter,
+          limits: { fileSize: 5 * 1024 * 1024 },
+      }),
+  )
   async createNewMovieController(
+      @UploadedFile() file: Express.Multer.File,
       @Request() req,
       @Body(new ValidationPipe()) createMovieDto: CreateMovieDto
   ) {
+    const user = req.user.userId
+    let imageUrl = '';
 
-      const user = req.user.userId
-      console.log(user)
+      if (file) {
+          imageUrl = await this.s3Service.uploadFile(file, 'movies');
+      }
 
-    const result = await this.movieService.createMovieService({
-      userId: req.user.userId,
-      ...createMovieDto,
-    })
+      const result = await this.movieService.createMovieService({
+          userId: user,
+          ...createMovieDto,
+          image: imageUrl,
+      });
 
     if (!result) {
       throw new BadRequestException('Invalid input')

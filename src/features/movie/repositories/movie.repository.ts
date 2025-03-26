@@ -10,7 +10,7 @@ export class MovieRepository {
 
   async createNewMovie(newMovie: Movie) {
     try {
-      await this.MovieModel.create(newMovie)
+        await this.MovieModel.create(newMovie)
       const createdMovie = await this.MovieModel.findOne({ id: newMovie.id })
 
       if (!createdMovie) {

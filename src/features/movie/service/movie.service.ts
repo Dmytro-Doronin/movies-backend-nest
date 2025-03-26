@@ -16,6 +16,7 @@ export class MovieService {
 
   async createMovieService({
     userId,
+    image,
     ...rest
   }: CreateMovieDto & { userId: string }): Promise<MovieOutputModel | null> {
 
@@ -24,7 +25,12 @@ export class MovieService {
     if (!user) {
         throw new NotFoundException('User not found')
     }
-    const newMovie = Movie.create({ id: uuidv4(), userId: userId, ...rest })
+      const newMovie = {
+          id: uuidv4(),
+          image,
+          userId,
+          ...rest,
+      }
 
     const movie = await this.movieRepository.createNewMovie(newMovie)
 
