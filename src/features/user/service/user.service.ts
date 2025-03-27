@@ -17,7 +17,7 @@ export class UserService {
     private movieRepository: MovieRepository
   ) {}
 
-  async createUser({ login, password, email }: CreateUserDto) {
+  async createUser({ login, password, email, imageUrl }: CreateUserDto & {imageUrl: string | null}) {
     const passwordSalt = await bcrypt.genSalt(10)
     const passwordHash = await this._generateHash(password, passwordSalt)
 
@@ -27,7 +27,7 @@ export class UserService {
       email,
       passwordSalt,
       passwordHash,
-      imageUrl: 'asd',
+      imageUrl,
       wishlist: [],
     })
 

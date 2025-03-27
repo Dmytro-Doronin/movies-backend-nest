@@ -5,13 +5,16 @@ import {
     NotFoundException, Param,
     Post,
     Put,
-    Request,
-    UseGuards,
+    Request, UploadedFile,
+    UseGuards, UseInterceptors,
     ValidationPipe,
 } from '@nestjs/common'
 import { CreateUserDto } from '../models/create-user.dto'
 import { UserService } from '../service/user.service'
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'
+import {FileInterceptor} from "@nestjs/platform-express";
+import {imageFileFilter} from "../../../common/utils/file-filter.utils";
+import {S3Service} from "../../../common/services/s3.service";
 
 @Controller('/user')
 export class UserController {
@@ -19,17 +22,38 @@ export class UserController {
 
   constructor(
     userService: UserService,
+    private readonly s3Service: S3Service,
   ) {
     this.userService = userService
+
+
   }
 
   @UseGuards(JwtAuthGuard)
+
   @Post()
-  async createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+  @UseInterceptors(
+      FileInterceptor('image', {
+          fileFilter: imageFileFilter,
+          limits: { fileSize: 5 * 1024 * 1024 },
+      }),
+  )
+  async createUser(
+      @UploadedFile() file: Express.Multer.File,
+      @Body(new ValidationPipe()) createUserDto: CreateUserDto
+  ) {
+
+      let imageUrl: string | null = null;
+
+      if (file) {
+          imageUrl = await this.s3Service.uploadFile(file, 'movies');
+      }
+
     const user = await this.userService.createUser({
       login: createUserDto.login,
       email: createUserDto.email,
       password: createUserDto.password,
+      imageUrl
     })
 
     if (!user) {

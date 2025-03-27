@@ -1,14 +1,14 @@
 import {
-  Body,
-  Controller,
-  HttpCode,
-  NotFoundException,
-  Post,
-  Request,
-  Res,
-  UseFilters,
-  UseGuards,
-  ValidationPipe,
+    Body,
+    Controller,
+    HttpCode,
+    NotFoundException,
+    Post,
+    Request,
+    Res, UploadedFile,
+    UseFilters,
+    UseGuards, UseInterceptors,
+    ValidationPipe,
 } from '@nestjs/common'
 import { Response } from 'express'
 
@@ -21,65 +21,49 @@ import { UserQueryRepository } from '../../user/repositories/user-query.reposito
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {JwtService} from "@nestjs/jwt";
 import {CustomJwtService} from "../../../common/jwt-module/service/jwt.service";
+import {FileInterceptor} from "@nestjs/platform-express";
+import {imageFileFilter} from "../../../common/utils/file-filter.utils";
+import {S3Service} from "../../../common/services/s3.service";
 
 @Controller('/auth')
 export class AuthController {
     constructor(
         private authService: AuthService,
         private jwtService: CustomJwtService,
+        private readonly s3Service: S3Service,
+
     ) {
     }
 
-    // @UseFilters(UserDoesNotExistsFilter)
-    // @UseGuards(LocalAuthGuard)
-    // @Post('/login')
-    // async login(@Request() req, @Res() res: Response) {
-    //     const user = req.user
-    //
-    //     const {accessToken, refreshToken} = await this.authService.createJWT(user)
-    //
-    //     res.cookie('refreshToken', refreshToken, {
-    //         httpOnly: true,
-    //         secure: true,
-    //         sameSite: 'none',
-    //     })
-    //     res.status(200).send({accessToken})
-    // }
+
 
     @HttpCode(204)
     @Post('/registration')
-    async registration(@Body(new ValidationPipe()) authInputDto: AuthInputDto) {
+    @UseInterceptors(
+        FileInterceptor('image', {
+            fileFilter: imageFileFilter,
+            limits: { fileSize: 5 * 1024 * 1024 },
+        }),
+    )
+    async registration(
+        @UploadedFile() file: Express.Multer.File,
+        @Body(new ValidationPipe()) authInputDto: AuthInputDto
+    ) {
+
+        let imageUrl: string | null = null;
+
+        if (file) {
+            imageUrl = await this.s3Service.uploadFile(file, 'movies');
+        }
+
         await this.authService.registration({
             login: authInputDto.login,
             password: authInputDto.password,
             email: authInputDto.email,
+            imageUrl
         })
     }
 
-    // @UseGuards(VerifyRefreshTokenGuard)
-    // @Post('/logout')
-    // async logout(@Res() res: Response) {
-    //     res.clearCookie('refreshToken', {
-    //         httpOnly: true,
-    //         secure: true,
-    //         sameSite: 'none',
-    //     })
-    //
-    //     return res.sendStatus(204)
-    // }
-
-    // @UseGuards(VerifyRefreshTokenGuard)
-    // @Post('/refresh-token')
-    //
-    // async refreshToken(@Request() req) {
-    //     const user = await this.userQueryRepository.getUserById(req.userId)
-    //     if (!user) throw new NotFoundException()
-    //     const {accessToken, refreshToken} = await this.authService.createJWT(user)
-    //     return {
-    //         accessToken,
-    //         refreshToken,
-    //     }
-    // }
 
     @UseGuards(LocalAuthGuard)
     @Post('/login')

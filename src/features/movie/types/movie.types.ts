@@ -18,7 +18,7 @@ export type MovieCreateInput = {
     userId: string;
     name: string;
     overview: string;
-    image?: string;
+    image: string | null;
     genres?: string[];
     rating?: number;
     releaseDate?: string;

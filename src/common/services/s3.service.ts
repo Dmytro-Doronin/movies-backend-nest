@@ -56,4 +56,46 @@ export class S3Service {
 
         await this.s3.send(command);
     }
+
+    async replaceImage(
+        newFile: Express.Multer.File | undefined,
+        existingImageUrl: string | null,
+        folder: string,
+    ): Promise<string | null> {
+        if (!newFile) return existingImageUrl;
+
+        const newImageUrl = await this.uploadFile(newFile, folder)
+
+        if (existingImageUrl) {
+            const oldKey = decodeURIComponent(existingImageUrl.split('.com/')[1])
+
+            if (oldKey) {
+                try {
+                    await this.deleteFile(oldKey);
+                } catch (error) {
+                    throw new InternalServerErrorException(
+                        `Failed to delete old image with key: ${oldKey}. ${error.message}`,
+                    )
+                }
+            }
+        }
+
+        return newImageUrl;
+    }
+
+    async deleteImageByUrl(imageUrl: string): Promise<void> {
+        if (!imageUrl) return
+
+        const key = decodeURIComponent(imageUrl.split('amazonaws.com/')[1])
+
+        if (!key) return
+
+        try {
+            await this.deleteFile(key)
+        } catch (error) {
+            throw new InternalServerErrorException(
+                `Failed to delete image with key: ${key}. ${error.message}`,
+            )
+        }
+    }
 }

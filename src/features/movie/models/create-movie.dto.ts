@@ -33,7 +33,7 @@ export class CreateMovieDto {
 
   @IsOptional()
   @IsString()
-  image?: string
+  image: string | null
 
   @IsOptional()
   @IsArray()

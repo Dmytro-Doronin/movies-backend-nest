@@ -11,7 +11,7 @@ export class MovieOutputModel {
   name: string
   overview: string
   userId: string
-  image?: string | null
+  image: string | null
   genres?: string[] | null
   rating?: number | null
   releaseDate?: string | null

@@ -51,8 +51,8 @@ export class AuthService {
         return { accessToken, refreshToken };
     }
 
-    async registration({ login, password, email }: AuthInputDto) {
-        return await this.userService.createUser({ login, password, email });
+    async registration({ login, password, email, imageUrl }: AuthInputDto & {imageUrl: string | null}) {
+        return await this.userService.createUser({ login, password, email, imageUrl });
     }
 
     async validateUser(login: string, password: string): Promise<UserServiceModel | null> {

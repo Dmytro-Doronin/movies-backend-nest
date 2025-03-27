@@ -3,7 +3,7 @@ import {
     Body,
     Controller,
     Delete,
-    Get,
+    Get, InternalServerErrorException,
     NotFoundException,
     Param,
     Post,
@@ -62,7 +62,7 @@ export class MovieController {
       @Body(new ValidationPipe()) createMovieDto: CreateMovieDto
   ) {
     const user = req.user.userId
-    let imageUrl = '';
+    let imageUrl: string | null = null;
 
       if (file) {
           imageUrl = await this.s3Service.uploadFile(file, 'movies');
@@ -81,9 +81,17 @@ export class MovieController {
     return result
   }
 
+
   @UseGuards(JwtAuthGuard)
   @Put('/:id')
-  async changeBlogByIdController(
+  @UseInterceptors(
+      FileInterceptor('image', {
+          fileFilter: imageFileFilter,
+          limits: { fileSize: 5 * 1024 * 1024 },
+      }),
+  )
+  async changeMovieByIdController(
+    @UploadedFile() file: Express.Multer.File,
     @Body(new ValidationPipe()) createMovieDto: CreateMovieDto,
     @Param('id') movieId: string
   ) {
@@ -93,9 +101,13 @@ export class MovieController {
       throw new NotFoundException('Movie not found')
     }
 
+
+    const imageUrl = await this.s3Service.replaceImage(file, existingMovie.image, 'movies');
+
     const result = await this.movieService.changeMovieByIdService({
       id: movieId,
       ...createMovieDto,
+      image: imageUrl,
     })
 
     if (!result) {
@@ -123,6 +135,10 @@ export class MovieController {
 
     if (!movie) {
       throw new NotFoundException('Movie was not deleted')
+    }
+
+    if (movie.image) {
+      await this.s3Service.deleteImageByUrl(movie.image);
     }
 
     return movie

@@ -22,7 +22,7 @@ export class Movie {
   userId: string
 
   @Prop({ required: false, default: null, type: String })
-  image?: string | null
+  image: string | null
 
   @Prop({ required: false, default: null, type: [String] })
   genres?: string[] | null
