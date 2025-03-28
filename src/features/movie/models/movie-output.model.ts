@@ -1,10 +1,5 @@
 import { MovieDocument } from '../domain/movie.entity'
-
-export class Actor {
-  id: string
-  name: string
-  image: string
-}
+import {Actor} from "../../actors/domain/actor.entity";
 
 export class MovieOutputModel {
   id: string
@@ -22,7 +17,7 @@ export class MovieOutputModel {
   revenue?: string | null
   tagline?: string | null
   companies?: string[] | null
-  actors?: Actor[] | null
+  actors: Actor[] | string[] | null;
 }
 
 export class MovieFinalOutputModel {

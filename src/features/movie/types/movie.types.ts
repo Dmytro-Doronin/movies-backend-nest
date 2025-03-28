@@ -1,5 +1,5 @@
 import { CreateMovieDto } from '../models/create-movie.dto'
-import {Actor} from "../domain/actor.entity";
+import {Actor} from "../../actors/domain/actor.entity";
 
 type SortDirection = 'asc' | 'desc'
 
@@ -29,5 +29,5 @@ export type MovieCreateInput = {
     revenue?: string;
     tagline?: string;
     companies?: string[];
-    actors?: Actor[];
+    actors: string[] | null;
 };

@@ -8,6 +8,7 @@ import { AuthModule } from './features/auth/auth.module'
 import { UserModule } from './features/user/user.module'
 import { CustomAuthMiddleware } from './common/jwt-module/middleware/custom-auth.middleware'
 import { CustomJwtModule } from './common/jwt-module/jwt.module'
+import {ActorModule} from "./features/actors/actors.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CustomJwtModule } from './common/jwt-module/jwt.module'
     UserModule,
     AuthModule,
     CustomJwtModule,
+    ActorModule
   ],
   controllers: [AppController],
   providers: [AppService],

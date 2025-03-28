@@ -108,7 +108,7 @@ describe('AuthService', () => {
 
     describe('registration', () => {
         it('should call createUser', async () => {
-            const dto = { login: 'test', email: 'test@test.com', password: '123456' }
+            const dto = { login: 'test', email: 'test@test.com', password: '123456', imageUrl: 'test' }
             mockUserService.createUser.mockResolvedValue({ ...mockUser, ...dto })
 
             const result = await service.registration(dto)

@@ -10,8 +10,10 @@ export class MovieRepository {
 
   async createNewMovie(newMovie: Movie) {
     try {
-        await this.MovieModel.create(newMovie)
-      const createdMovie = await this.MovieModel.findOne({ id: newMovie.id })
+      await this.MovieModel.create(newMovie)
+      const createdMovie = await this.MovieModel
+          .findOne({ id: newMovie.id })
+          .populate({ path: 'actors', model: 'Actor' });
 
       if (!createdMovie) {
         return null
@@ -29,7 +31,7 @@ export class MovieRepository {
         { id },
         { $set: rest },
         { new: true }
-      )
+      ).populate({ path: 'actors', model: 'Actor' });
 
       if (!updatedMovie) return null
 
@@ -49,7 +51,9 @@ export class MovieRepository {
 
   async deleteMovieById(id: string) {
     try {
-      const deletedMovie = await this.MovieModel.findOneAndDelete({ id })
+      const deletedMovie = await this.MovieModel
+          .findOneAndDelete({ id })
+          .populate({ path: 'actors', model: 'Actor' });
 
       if (!deletedMovie) return null
 

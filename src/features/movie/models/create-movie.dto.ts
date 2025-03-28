@@ -4,23 +4,8 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  ValidateNested,
 } from 'class-validator'
-import { Type } from 'class-transformer'
 
-class ActorDto {
-  @IsString()
-  @IsNotEmpty()
-  id: string
-
-  @IsString()
-  @IsNotEmpty()
-  name: string
-
-  @IsString()
-  @IsNotEmpty()
-  image: string
-}
 
 export class CreateMovieDto {
   @IsString()
@@ -86,7 +71,6 @@ export class CreateMovieDto {
 
   @IsOptional()
   @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ActorDto)
-  actors?: ActorDto[]
+  @IsString({ each: true })
+  actors: string[]
 }

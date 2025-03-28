@@ -1,6 +1,6 @@
 type SortDirection = 'asc' | 'desc'
 
-export type QueryMovieInputModel = {
+export type QueryInputModel = {
   searchNameTerm?: string
   sortBy?: string
   sortDirection?: SortDirection

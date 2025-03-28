@@ -54,7 +54,9 @@ export class MovieQueryRepository {
 
   async getMovieById(id: string): Promise<MovieOutputModel | null> {
     try {
-      const movie = await this.MovieModel.findOne({ id: id })
+      const movie = await this.MovieModel
+          .findOne({ id: id })
+          .populate({ path: 'actors', model: 'Actor' });
       if (!movie) {
         return null
       }

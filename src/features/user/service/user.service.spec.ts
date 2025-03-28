@@ -78,6 +78,7 @@ describe('UserService', () => {
                 login: 'test',
                 email: 'test@example.com',
                 password: 'password123',
+                imageUrl: 'test'
             };
 
             const salt = 'random_salt';

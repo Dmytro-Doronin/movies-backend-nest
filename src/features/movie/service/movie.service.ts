@@ -2,7 +2,6 @@ import {Injectable, NotFoundException} from '@nestjs/common'
 import { MovieRepository } from '../repositories/movie.repository'
 import { CreateMovieDto } from '../models/create-movie.dto'
 import { MovieOutputModel, MovieOutputModelMapper } from '../models/movie-output.model'
-import { Movie } from '../domain/movie.entity'
 import { v4 as uuidv4 } from 'uuid'
 import { ChangeMovieByIdTypes } from '../types/movie.types'
 import {UserQueryRepository} from "../../user/repositories/user-query.repository";

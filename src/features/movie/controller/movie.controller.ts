@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common'
 import { MovieService } from '../service/movie.service'
 import { CreateMovieDto } from '../models/create-movie.dto'
-import { QueryMovieInputModel } from '../../../types/common-types'
+import { QueryInputModel } from '../../../types/common-types'
 import { MovieQueryRepository } from '../repositories/movies-query.repository'
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'
 import {FileInterceptor} from "@nestjs/platform-express";
@@ -37,7 +37,7 @@ export class MovieController {
     @Query('pageNumber') pageNumber: string,
     @Query('pageSize') pageSize: string
   ) {
-    const sortData: QueryMovieInputModel = {
+    const sortData: QueryInputModel = {
       searchNameTerm,
       sortBy,
       sortDirection,

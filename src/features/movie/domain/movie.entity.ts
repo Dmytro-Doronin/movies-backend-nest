@@ -1,8 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { HydratedDocument } from 'mongoose'
-import { Actor } from './actor.entity'
-import { Type } from 'class-transformer'
-import { MovieOutputModel } from '../models/movie-output.model'
+import { Actor } from '../../actors/domain/actor.entity'
 import {MovieCreateInput} from "../types/movie.types";
 
 export type MovieDocument = HydratedDocument<Movie>
@@ -54,9 +52,8 @@ export class Movie {
   @Prop({ required: false, default: null, type: [String] })
   companies?: string[] | null
 
-  @Prop({ required: false, default: null, type: [Object] })
-  @Type(() => Actor)
-  actors?: Actor[] | null
+  @Prop({ type: [String], default: null, ref: 'Actor' })
+  actors: Actor[] | string[] | null;
 
   static create({
     id,
